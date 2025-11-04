@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Guitar Application</title>
+    <style>
+        /* Web Guitar Application Styles */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        main {
+            padding: 30px;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .recording-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-record {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-stop {
+            background: #34495e;
+            color: white;
+        }
+
+        .btn-play {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-clear {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-add {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-play-chord {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .icon {
+            font-size: 18px;
+        }
+
+        .status-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        #statusText {
+            color: #667eea;
+        }
+
+        #recordingTime {
+            color: #e74c3c;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        /* Chord Input Section */
+        .chord-input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border: 2px solid #e9ecef;
+        }
+
+        .chord-input-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        #chordInput {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        #chordInput:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .chord-sequence {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .chord-sequence h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        #sequenceDisplay {
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            color: #34495e;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .chord-examples {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .chord-examples p {
+            margin-bottom: 5px;
+            color: #856404;
+        }
+
+        .chord-examples strong {
+            color: #856404;
+        }
+
+        /* Guitar Interface */
+        .guitar-interface {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .guitar-interface h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .strings-container {
+            background: #1a252f;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .string-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px;
+        }
+
+        .string-label {
+            color: #ecf0f1;
+            font-weight: bold;
+            min-width: 80px;
+            font-size: 14px;
+        }
+
+        .string {
+            display: flex;
+            gap: 5px;
+            flex: 1;
+            background: linear-gradient(to bottom, #555, #333);
+            padding: 8px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .string::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right, #c0c0c0, #888);
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+
+        .fret {
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: 2px solid #2c3e50;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .fret:hover {
+            background: linear-gradient(135deg, #5dade2, #3498db);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .fret:active {
+            transform: scale(0.95);
+            background: #e74c3c;
+        }
+
+        /* Quick Chords */
+        .quick-chords {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .quick-chords h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .chord-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .chord-btn {
+            background: white;
+            color: #f5576c;
+            border: 3px solid white;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .chord-btn:hover {
+            background: #f5576c;
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .chord-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Recording Info */
+        .recording-info {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 4px solid #4caf50;
+            margin-bottom: 20px;
+        }
+
+        .recording-info h3 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        #recordedNotes {
+            font-family: 'Courier New', monospace;
+            color: #1b5e20;
+            font-size: 14px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            word-wrap: break-word;
+        }
+
+        /* Footer */
+        footer {
+            background: #34495e;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            main {
+                padding: 15px;
+            }
+
+            .recording-controls {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .string-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .string {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .chord-buttons {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            #chordInput {
+                width: 100%;
+            }
+        }
+
+        /* Animation for button press */
+        @keyframes buttonPress {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(0.95);
+            }
+        }
+
+        .btn:active:not(:disabled) {
+            animation: buttonPress 0.1s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎸 Web Guitar Studio</h1>
+            <p>Play, Record, and Replay Your Music</p>
+        </header>
+
+        <main>
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="recording-controls">
+                    <button id="recordBtn" class="btn btn-record">
+                        <span class="icon">⏺</span> Record
+                    </button>
+                    <button id="stopBtn" class="btn btn-stop" disabled>
+                        <span class="icon">⏹</span> Stop
+                    </button>
+                    <button id="playBtn" class="btn btn-play" disabled>
+                        <span class="icon">▶</span> Play
+                    </button>
+                    <button id="clearBtn" class="btn btn-clear">
+                        <span class="icon">🗑</span> Clear
+                    </button>
+                </div>
+                <div class="status-display">
+                    <span id="statusText">Ready to record</span>
+                    <span id="recordingTime">0:00</span>
+                </div>
+            </div>
+
+            <!-- Chord Input Section -->
+            <div class="chord-input-section">
+                <h3>Input Chords/Notes</h3>
+                <div class="input-group">
+                    <input type="text" id="chordInput" placeholder="Enter chords (e.g., C Am F G) or notes (C4 E4 G4)">
+                    <button id="addChordBtn" class="btn btn-add">Add to Sequence</button>
+                    <button id="playChordBtn" class="btn btn-play-chord">Play Now</button>
+                </div>
+                <div class="chord-sequence">
+                    <h4>Current Sequence:</h4>
+                    <div id="sequenceDisplay">Empty</div>
+                </div>
+                <div class="chord-examples">
+                    <p><strong>Examples:</strong></p>
+                    <p>Chords: C, Am, F, G, Em, Dm, D, E, A, Cmaj7, Am7</p>
+                    <p>Notes: C4, D4, E4, F4, G4, A4, B4 (number indicates octave)</p>
+                </div>
+            </div>
+
+            <!-- Virtual Guitar Strings/Fretboard -->
+            <div class="guitar-interface">
+                <h3>Virtual Guitar Strings</h3>
+                <div class="strings-container">
+                    <div class="string-row">
+                        <span class="string-label">E (high)</span>
+                        <div class="string" data-string="E4">
+                            <button class="fret" data-fret="0" data-note="E4">E</button>
+                            <button class="fret" data-fret="1" data-note="F4">F</button>
+                            <button class="fret" data-fret="2" data-note="F#4">F#</button>
+                            <button class="fret" data-fret="3" data-note="G4">G</button>
+                            <button class="fret" data-fret="4" data-note="G#4">G#</button>
+                            <button class="fret" data-fret="5" data-note="A4">A</button>
+                            <button class="fret" data-fret="7" data-note="B4">B</button>
+                            <button class="fret" data-fret="8" data-note="C5">C</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">B</span>
+                        <div class="string" data-string="B3">
+                            <button class="fret" data-fret="0" data-note="B3">B</button>
+                            <button class="fret" data-fret="1" data-note="C4">C</button>
+                            <button class="fret" data-fret="2" data-note="C#4">C#</button>
+                            <button class="fret" data-fret="3" data-note="D4">D</button>
+                            <button class="fret" data-fret="4" data-note="D#4">D#</button>
+                            <button class="fret" data-fret="5" data-note="E4">E</button>
+                            <button class="fret" data-fret="7" data-note="F#4">F#</button>
+                            <button class="fret" data-fret="8" data-note="G4">G</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">G</span>
+                        <div class="string" data-string="G3">
+                            <button class="fret" data-fret="0" data-note="G3">G</button>
+                            <button class="fret" data-fret="1" data-note="G#3">G#</button>
+                            <button class="fret" data-fret="2" data-note="A3">A</button>
+                            <button class="fret" data-fret="3" data-note="A#3">A#</button>
+                            <button class="fret" data-fret="4" data-note="B3">B</button>
+                            <button class="fret" data-fret="5" data-note="C4">C</button>
+                            <button class="fret" data-fret="7" data-note="D4">D</button>
+                            <button class="fret" data-fret="8" data-note="D#4">D#</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">D</span>
+                        <div class="string" data-string="D3">
+                            <button class="fret" data-fret="0" data-note="D3">D</button>
+                            <button class="fret" data-fret="1" data-note="D#3">D#</button>
+                            <button class="fret" data-fret="2" data-note="E3">E</button>
+                            <button class="fret" data-fret="3" data-note="F3">F</button>
+                            <button class="fret" data-fret="4" data-note="F#3">F#</button>
+                            <button class="fret" data-fret="5" data-note="G3">G</button>
+                            <button class="fret" data-fret="7" data-note="A3">A</button>
+                            <button class="fret" data-fret="8" data-note="A#3">A#</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">A</span>
+                        <div class="string" data-string="A2">
+                            <button class="fret" data-fret="0" data-note="A2">A</button>
+                            <button class="fret" data-fret="1" data-note="A#2">A#</button>
+                            <button class="fret" data-fret="2" data-note="B2">B</button>
+                            <button class="fret" data-fret="3" data-note="C3">C</button>
+                            <button class="fret" data-fret="4" data-note="C#3">C#</button>
+                            <button class="fret" data-fret="5" data-note="D3">D</button>
+                            <button class="fret" data-fret="7" data-note="E3">E</button>
+                            <button class="fret" data-fret="8" data-note="F3">F</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">E (low)</span>
+                        <div class="string" data-string="E2">
+                            <button class="fret" data-fret="0" data-note="E2">E</button>
+                            <button class="fret" data-fret="1" data-note="F2">F</button>
+                            <button class="fret" data-fret="2" data-note="F#2">F#</button>
+                            <button class="fret" data-fret="3" data-note="G2">G</button>
+                            <button class="fret" data-fret="4" data-note="G#2">G#</button>
+                            <button class="fret" data-fret="5" data-note="A2">A</button>
+                            <button class="fret" data-fret="7" data-note="B2">B</button>
+                            <button class="fret" data-fret="8" data-note="C3">C</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Chord Buttons -->
+            <div class="quick-chords">
+                <h3>Quick Chords</h3>
+                <div class="chord-buttons">
+                    <button class="chord-btn" data-chord="C">C</button>
+                    <button class="chord-btn" data-chord="D">D</button>
+                    <button class="chord-btn" data-chord="E">E</button>
+                    <button class="chord-btn" data-chord="F">F</button>
+                    <button class="chord-btn" data-chord="G">G</button>
+                    <button class="chord-btn" data-chord="A">A</button>
+                    <button class="chord-btn" data-chord="Am">Am</button>
+                    <button class="chord-btn" data-chord="Em">Em</button>
+                    <button class="chord-btn" data-chord="Dm">Dm</button>
+                    <button class="chord-btn" data-chord="G7">G7</button>
+                    <button class="chord-btn" data-chord="Cmaj7">Cmaj7</button>
+                    <button class="chord-btn" data-chord="Am7">Am7</button>
+                </div>
+            </div>
+
+            <!-- Recording Info -->
+            <div class="recording-info">
+                <h3>Recorded Notes</h3>
+                <div id="recordedNotes">No recording yet</div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Use keyboard keys or click frets to play notes. Record your performance and play it back!</p>
+        </footer>
+    </div>
+
+    <script>
+        // Web Guitar Application
+        // Audio Engine and Recording System
+
+        class GuitarApp {
+            constructor() {
+                this.audioContext = null;
+                this.isRecording = false;
+                this.isPlaying = false;
+                this.recordedNotes = [];
+                this.startTime = null;
+                this.recordingTimer = null;
+                this.sequence = [];
+
+                this.initAudioContext();
+                this.setupEventListeners();
+                this.setupKeyboardShortcuts();
+            }
+
+            initAudioContext() {
+                this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+
+            // Note frequency mapping
+            noteFrequencies = {
+                'C2': 65.41, 'C#2': 69.30, 'D2': 73.42, 'D#2': 77.78, 'E2': 82.41, 'F2': 87.31,
+                'F#2': 92.50, 'G2': 98.00, 'G#2': 103.83, 'A2': 110.00, 'A#2': 116.54, 'B2': 123.47,
+                'C3': 130.81, 'C#3': 138.59, 'D3': 146.83, 'D#3': 155.56, 'E3': 164.81, 'F3': 174.61,
+                'F#3': 185.00, 'G3': 196.00, 'G#3': 207.65, 'A3': 220.00, 'A#3': 233.08, 'B3': 246.94,
+                'C4': 261.63, 'C#4': 277.18, 'D4': 293.66, 'D#4': 311.13, 'E4': 329.63, 'F4': 349.23,
+                'F#4': 369.99, 'G4': 392.00, 'G#4': 415.30, 'A4': 440.00, 'A#4': 466.16, 'B4': 493.88,
+                'C5': 523.25, 'C#5': 554.37, 'D5': 587.33, 'D#5': 622.25, 'E5': 659.25, 'F5': 698.46,
+                'F#5': 739.99, 'G5': 783.99, 'G#5': 830.61, 'A5': 880.00, 'A#5': 932.33, 'B5': 987.77
+            };
+
+            // Chord definitions (notes in each chord)
+            chordDefinitions = {
+                'C': ['C4', 'E4', 'G4'],
+                'D': ['D4', 'F#4', 'A4'],
+                'E': ['E4', 'G#4', 'B4'],
+                'F': ['F4', 'A4', 'C5'],
+                'G': ['G4', 'B4', 'D5'],
+                'A': ['A4', 'C#5', 'E5'],
+                'B': ['B4', 'D#5', 'F#5'],
+                'Am': ['A4', 'C5', 'E5'],
+                'Dm': ['D4', 'F4', 'A4'],
+                'Em': ['E4', 'G4', 'B4'],
+                'G7': ['G4', 'B4', 'D5', 'F5'],
+                'Cmaj7': ['C4', 'E4', 'G4', 'B4'],
+                'Am7': ['A4', 'C5', 'E5', 'G5'],
+                'Fmaj7': ['F4', 'A4', 'C5', 'E5'],
+                'Dm7': ['D4', 'F4', 'A4', 'C5']
+            };
+
+            // Play a single note with guitar-like sound
+            playNote(note, duration = 0.5) {
+                const frequency = this.noteFrequencies[note];
+                if (!frequency) {
+                    console.error('Unknown note:', note);
+                    return;
+                }
+
+                const now = this.audioContext.currentTime;
+
+                // Create oscillators for richer guitar-like sound
+                const oscillator1 = this.audioContext.createOscillator();
+                const oscillator2 = this.audioContext.createOscillator();
+                const oscillator3 = this.audioContext.createOscillator();
+
+                const gainNode = this.audioContext.createGain();
+
+                // Main tone
+                oscillator1.type = 'triangle';
+                oscillator1.frequency.setValueAtTime(frequency, now);
+
+                // Harmonic
+                oscillator2.type = 'sine';
+                oscillator2.frequency.setValueAtTime(frequency * 2, now);
+
+                // Sub-harmonic for depth
+                oscillator3.type = 'sine';
+                oscillator3.frequency.setValueAtTime(frequency * 0.5, now);
+
+                // Mix oscillators
+                const gain1 = this.audioContext.createGain();
+                const gain2 = this.audioContext.createGain();
+                const gain3 = this.audioContext.createGain();
+
+                gain1.gain.setValueAtTime(0.4, now);
+                gain2.gain.setValueAtTime(0.2, now);
+                gain3.gain.setValueAtTime(0.1, now);
+
+                oscillator1.connect(gain1);
+                oscillator2.connect(gain2);
+                oscillator3.connect(gain3);
+
+                gain1.connect(gainNode);
+                gain2.connect(gainNode);
+                gain3.connect(gainNode);
+
+                gainNode.connect(this.audioContext.destination);
+
+                // ADSR Envelope (Attack, Decay, Sustain, Release)
+                gainNode.gain.setValueAtTime(0, now);
+                gainNode.gain.linearRampToValueAtTime(0.3, now + 0.01); // Attack
+                gainNode.gain.linearRampToValueAtTime(0.2, now + 0.1);  // Decay
+                gainNode.gain.setValueAtTime(0.2, now + 0.1);           // Sustain
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + duration); // Release
+
+                oscillator1.start(now);
+                oscillator2.start(now);
+                oscillator3.start(now);
+
+                oscillator1.stop(now + duration);
+                oscillator2.stop(now + duration);
+                oscillator3.stop(now + duration);
+
+                // Record note if recording
+                if (this.isRecording && this.startTime) {
+                    const timestamp = Date.now() - this.startTime;
+                    this.recordedNotes.push({ note, timestamp });
+                    this.updateRecordedNotesDisplay();
+                }
+            }
+
+            // Play a chord (multiple notes at once)
+            playChord(chordName) {
+                const notes = this.chordDefinitions[chordName];
+                if (!notes) {
+                    console.error('Unknown chord:', chordName);
+                    return;
+                }
+
+                notes.forEach((note, index) => {
+                    setTimeout(() => {
+                        this.playNote(note, 1.0);
+                    }, index * 10); // Slight stagger for more realistic sound
+                });
+            }
+
+            // Parse input string (could be notes or chords)
+            parseInput(input) {
+                const items = input.trim().split(/\s+/);
+                const result = [];
+
+                items.forEach(item => {
+                    if (this.chordDefinitions[item]) {
+                        result.push({ type: 'chord', value: item });
+                    } else if (this.noteFrequencies[item]) {
+                        result.push({ type: 'note', value: item });
+                    }
+                });
+
+                return result;
+            }
+
+            // Add to sequence
+            addToSequence(input) {
+                const items = this.parseInput(input);
+                if (items.length > 0) {
+                    this.sequence = this.sequence.concat(items);
+                    this.updateSequenceDisplay();
+                    return true;
+                }
+                return false;
+            }
+
+            // Play the current sequence
+            async playSequence() {
+                if (this.sequence.length === 0) {
+                    alert('Sequence is empty. Add some chords or notes first!');
+                    return;
+                }
+
+                this.isPlaying = true;
+                this.updateStatus('Playing sequence...');
+                this.disableControls(true);
+
+                for (let i = 0; i < this.sequence.length; i++) {
+                    if (!this.isPlaying) break;
+
+                    const item = this.sequence[i];
+                    if (item.type === 'chord') {
+                        this.playChord(item.value);
+                    } else if (item.type === 'note') {
+                        this.playNote(item.value, 0.5);
+                    }
+
+                    await this.sleep(600); // Wait between items
+                }
+
+                this.isPlaying = false;
+                this.updateStatus('Sequence complete');
+                this.disableControls(false);
+            }
+
+            // Play recorded notes
+            async playRecording() {
+                if (this.recordedNotes.length === 0) {
+                    alert('No recording to play. Record something first!');
+                    return;
+                }
+
+                this.isPlaying = true;
+                this.updateStatus('Playing recording...');
+                this.disableControls(true);
+
+                const playStartTime = Date.now();
+                let currentIndex = 0;
+
+                const playbackInterval = setInterval(() => {
+                    if (!this.isPlaying || currentIndex >= this.recordedNotes.length) {
+                        clearInterval(playbackInterval);
+                        this.isPlaying = false;
+                        this.updateStatus('Playback complete');
+                        this.disableControls(false);
+                        return;
+                    }
+
+                    const elapsed = Date.now() - playStartTime;
+                    const note = this.recordedNotes[currentIndex];
+
+                    if (elapsed >= note.timestamp) {
+                        this.playNote(note.note, 0.5);
+                        currentIndex++;
+                    }
+                }, 10); // Check every 10ms for precise timing
+            }
+
+            // Recording controls
+            startRecording() {
+                this.isRecording = true;
+                this.recordedNotes = [];
+                this.startTime = Date.now();
+                this.updateStatus('Recording...');
+
+                // Start timer
+                let seconds = 0;
+                this.recordingTimer = setInterval(() => {
+                    seconds++;
+                    const mins = Math.floor(seconds / 60);
+                    const secs = seconds % 60;
+                    document.getElementById('recordingTime').textContent =
+                        `${mins}:${secs.toString().padStart(2, '0')}`;
+                }, 1000);
+
+                document.getElementById('recordBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+            }
+
+            stopRecording() {
+                this.isRecording = false;
+                clearInterval(this.recordingTimer);
+                this.updateStatus(`Recording stopped - ${this.recordedNotes.length} notes captured`);
+
+                document.getElementById('recordBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+                document.getElementById('playBtn').disabled = false;
+            }
+
+            clearRecording() {
+                this.recordedNotes = [];
+                this.sequence = [];
+                this.updateRecordedNotesDisplay();
+                this.updateSequenceDisplay();
+                this.updateStatus('Cleared all recordings and sequences');
+                document.getElementById('playBtn').disabled = true;
+                document.getElementById('recordingTime').textContent = '0:00';
+            }
+
+            // UI Updates
+            updateStatus(message) {
+                document.getElementById('statusText').textContent = message;
+            }
+
+            updateRecordedNotesDisplay() {
+                const display = document.getElementById('recordedNotes');
+                if (this.recordedNotes.length === 0) {
+                    display.textContent = 'No recording yet';
+                } else {
+                    const noteSummary = this.recordedNotes
+                        .map(n => n.note)
+                        .join(' → ');
+                    display.textContent = `${this.recordedNotes.length} notes: ${noteSummary}`;
+                }
+            }
+
+            updateSequenceDisplay() {
+                const display = document.getElementById('sequenceDisplay');
+                if (this.sequence.length === 0) {
+                    display.textContent = 'Empty';
+                } else {
+                    const items = this.sequence
+                        .map(item => item.value)
+                        .join(' → ');
+                    display.textContent = items;
+                }
+            }
+
+            disableControls(disabled) {
+                document.getElementById('recordBtn').disabled = disabled;
+                document.getElementById('clearBtn').disabled = disabled;
+            }
+
+            sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            // Event Listeners
+            setupEventListeners() {
+                // Fret buttons
+                document.querySelectorAll('.fret').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const note = e.target.dataset.note;
+                        this.playNote(note);
+                        this.animateButton(e.target);
+                    });
+                });
+
+                // Quick chord buttons
+                document.querySelectorAll('.chord-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const chord = e.target.dataset.chord;
+                        this.playChord(chord);
+                        this.animateButton(e.target);
+                    });
+                });
+
+                // Control buttons
+                document.getElementById('recordBtn').addEventListener('click', () => {
+                    this.startRecording();
+                });
+
+                document.getElementById('stopBtn').addEventListener('click', () => {
+                    this.stopRecording();
+                });
+
+                document.getElementById('playBtn').addEventListener('click', () => {
+                    this.playRecording();
+                });
+
+                document.getElementById('clearBtn').addEventListener('click', () => {
+                    if (confirm('Clear all recordings and sequences?')) {
+                        this.clearRecording();
+                    }
+                });
+
+                // Chord input
+                document.getElementById('addChordBtn').addEventListener('click', () => {
+                    const input = document.getElementById('chordInput').value;
+                    if (this.addToSequence(input)) {
+                        document.getElementById('chordInput').value = '';
+                    } else {
+                        alert('Invalid input. Please enter valid notes or chords.');
+                    }
+                });
+
+                document.getElementById('playChordBtn').addEventListener('click', () => {
+                    const input = document.getElementById('chordInput').value;
+                    const items = this.parseInput(input);
+
+                    items.forEach((item, index) => {
+                        setTimeout(() => {
+                            if (item.type === 'chord') {
+                                this.playChord(item.value);
+                            } else if (item.type === 'note') {
+                                this.playNote(item.value);
+                            }
+                        }, index * 600);
+                    });
+                });
+
+                // Enter key for chord input
+                document.getElementById('chordInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        document.getElementById('addChordBtn').click();
+                    }
+                });
+            }
+
+            // Keyboard shortcuts for playing notes
+            setupKeyboardShortcuts() {
+                const keyMap = {
+                    'a': 'C4', 's': 'D4', 'd': 'E4', 'f': 'F4',
+                    'g': 'G4', 'h': 'A4', 'j': 'B4', 'k': 'C5',
+                    'w': 'C#4', 'e': 'D#4', 't': 'F#4', 'y': 'G#4', 'u': 'A#4',
+                    'z': 'C3', 'x': 'D3', 'c': 'E3', 'v': 'F3', 'b': 'G3', 'n': 'A3', 'm': 'B3'
+                };
+
+                document.addEventListener('keydown', (e) => {
+                    // Ignore if typing in input field
+                    if (e.target.tagName === 'INPUT') return;
+
+                    const note = keyMap[e.key.toLowerCase()];
+                    if (note) {
+                        this.playNote(note);
+                    }
+                });
+            }
+
+            animateButton(button) {
+                button.style.transform = 'scale(0.95)';
+                button.style.backgroundColor = '#ff6b6b';
+                setTimeout(() => {
+                    button.style.transform = 'scale(1)';
+                    button.style.backgroundColor = '';
+                }, 100);
+            }
+        }
+
+        // Initialize app when page loads
+        let app;
+        window.addEventListener('DOMContentLoaded', () => {
+            app = new GuitarApp();
+            console.log('Guitar App initialized!');
+            console.log('Keyboard shortcuts: a,s,d,f,g,h,j,k for C4-C5 scale');
+        });
+    </script>
+</body>
+</html>
