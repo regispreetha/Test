@@ -1,29 +1,33 @@
 # 🚀 Easy Netlify Deployment
 
-## Download the Single File
+## IMPORTANT: Download index.html (Not guitar-app-single.html!)
 
-**Option 1: Direct Download from GitHub**
+Netlify requires the file to be named **index.html**. Use one of these methods:
+
+**Option 1: Direct Download from GitHub (EASIEST!)**
 
 1. Go to your repository: `https://github.com/regispreetha/Test`
 2. Switch to branch: `claude/web-guitar-app-011CUoWafNzkuH54Gd3z6diV`
-3. Click on: `guitar-app-single.html`
+3. Click on: **`index.html`** (the new file)
 4. Click the **"Raw"** button (top right)
-5. Right-click on the page → **"Save As..."** → Save as `guitar-app-single.html`
+5. Right-click on the page → **"Save As..."** → Save as **`index.html`**
 
 **Option 2: Direct Raw Link**
 
 Copy this URL and paste in your browser:
 ```
-https://raw.githubusercontent.com/regispreetha/Test/claude/web-guitar-app-011CUoWafNzkuH54Gd3z6diV/guitar-app-single.html
+https://raw.githubusercontent.com/regispreetha/Test/claude/web-guitar-app-011CUoWafNzkuH54Gd3z6diV/index.html
 ```
-Then right-click → Save As → `guitar-app-single.html`
+Then right-click → Save As → **`index.html`**
+
+**⚠️ IMPORTANT:** The file MUST be named `index.html` for Netlify to work!
 
 ---
 
 ## Deploy to Netlify Drop (NO SIGNUP REQUIRED!)
 
 1. **Go to:** https://app.netlify.com/drop
-2. **Drag and drop** the `guitar-app-single.html` file onto the page
+2. **Drag and drop** the **`index.html`** file onto the page
 3. **Wait 5 seconds** for upload to complete
 4. **Get your live URL!** (e.g., `https://amazing-site-xyz.netlify.app`)
 5. **Open on mobile** - just visit that URL from any device!
