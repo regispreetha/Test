@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Guitar Application</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎸 Web Guitar Studio</h1>
+            <p>Play, Record, and Replay Your Music</p>
+        </header>
+
+        <main>
+            <!-- Control Panel -->
+            <div class="control-panel">
+                <div class="recording-controls">
+                    <button id="recordBtn" class="btn btn-record">
+                        <span class="icon">⏺</span> Record
+                    </button>
+                    <button id="stopBtn" class="btn btn-stop" disabled>
+                        <span class="icon">⏹</span> Stop
+                    </button>
+                    <button id="playBtn" class="btn btn-play" disabled>
+                        <span class="icon">▶</span> Play
+                    </button>
+                    <button id="clearBtn" class="btn btn-clear">
+                        <span class="icon">🗑</span> Clear
+                    </button>
+                </div>
+                <div class="status-display">
+                    <span id="statusText">Ready to record</span>
+                    <span id="recordingTime">0:00</span>
+                </div>
+            </div>
+
+            <!-- Chord Input Section -->
+            <div class="chord-input-section">
+                <h3>Input Chords/Notes</h3>
+                <div class="input-group">
+                    <input type="text" id="chordInput" placeholder="Enter chords (e.g., C Am F G) or notes (C4 E4 G4)">
+                    <button id="addChordBtn" class="btn btn-add">Add to Sequence</button>
+                    <button id="playChordBtn" class="btn btn-play-chord">Play Now</button>
+                </div>
+                <div class="chord-sequence">
+                    <h4>Current Sequence:</h4>
+                    <div id="sequenceDisplay">Empty</div>
+                </div>
+                <div class="chord-examples">
+                    <p><strong>Examples:</strong></p>
+                    <p>Chords: C, Am, F, G, Em, Dm, D, E, A, Cmaj7, Am7</p>
+                    <p>Notes: C4, D4, E4, F4, G4, A4, B4 (number indicates octave)</p>
+                </div>
+            </div>
+
+            <!-- Virtual Guitar Strings/Fretboard -->
+            <div class="guitar-interface">
+                <h3>Virtual Guitar Strings</h3>
+                <div class="strings-container">
+                    <div class="string-row">
+                        <span class="string-label">E (high)</span>
+                        <div class="string" data-string="E4">
+                            <button class="fret" data-fret="0" data-note="E4">E</button>
+                            <button class="fret" data-fret="1" data-note="F4">F</button>
+                            <button class="fret" data-fret="2" data-note="F#4">F#</button>
+                            <button class="fret" data-fret="3" data-note="G4">G</button>
+                            <button class="fret" data-fret="4" data-note="G#4">G#</button>
+                            <button class="fret" data-fret="5" data-note="A4">A</button>
+                            <button class="fret" data-fret="7" data-note="B4">B</button>
+                            <button class="fret" data-fret="8" data-note="C5">C</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">B</span>
+                        <div class="string" data-string="B3">
+                            <button class="fret" data-fret="0" data-note="B3">B</button>
+                            <button class="fret" data-fret="1" data-note="C4">C</button>
+                            <button class="fret" data-fret="2" data-note="C#4">C#</button>
+                            <button class="fret" data-fret="3" data-note="D4">D</button>
+                            <button class="fret" data-fret="4" data-note="D#4">D#</button>
+                            <button class="fret" data-fret="5" data-note="E4">E</button>
+                            <button class="fret" data-fret="7" data-note="F#4">F#</button>
+                            <button class="fret" data-fret="8" data-note="G4">G</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">G</span>
+                        <div class="string" data-string="G3">
+                            <button class="fret" data-fret="0" data-note="G3">G</button>
+                            <button class="fret" data-fret="1" data-note="G#3">G#</button>
+                            <button class="fret" data-fret="2" data-note="A3">A</button>
+                            <button class="fret" data-fret="3" data-note="A#3">A#</button>
+                            <button class="fret" data-fret="4" data-note="B3">B</button>
+                            <button class="fret" data-fret="5" data-note="C4">C</button>
+                            <button class="fret" data-fret="7" data-note="D4">D</button>
+                            <button class="fret" data-fret="8" data-note="D#4">D#</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">D</span>
+                        <div class="string" data-string="D3">
+                            <button class="fret" data-fret="0" data-note="D3">D</button>
+                            <button class="fret" data-fret="1" data-note="D#3">D#</button>
+                            <button class="fret" data-fret="2" data-note="E3">E</button>
+                            <button class="fret" data-fret="3" data-note="F3">F</button>
+                            <button class="fret" data-fret="4" data-note="F#3">F#</button>
+                            <button class="fret" data-fret="5" data-note="G3">G</button>
+                            <button class="fret" data-fret="7" data-note="A3">A</button>
+                            <button class="fret" data-fret="8" data-note="A#3">A#</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">A</span>
+                        <div class="string" data-string="A2">
+                            <button class="fret" data-fret="0" data-note="A2">A</button>
+                            <button class="fret" data-fret="1" data-note="A#2">A#</button>
+                            <button class="fret" data-fret="2" data-note="B2">B</button>
+                            <button class="fret" data-fret="3" data-note="C3">C</button>
+                            <button class="fret" data-fret="4" data-note="C#3">C#</button>
+                            <button class="fret" data-fret="5" data-note="D3">D</button>
+                            <button class="fret" data-fret="7" data-note="E3">E</button>
+                            <button class="fret" data-fret="8" data-note="F3">F</button>
+                        </div>
+                    </div>
+                    <div class="string-row">
+                        <span class="string-label">E (low)</span>
+                        <div class="string" data-string="E2">
+                            <button class="fret" data-fret="0" data-note="E2">E</button>
+                            <button class="fret" data-fret="1" data-note="F2">F</button>
+                            <button class="fret" data-fret="2" data-note="F#2">F#</button>
+                            <button class="fret" data-fret="3" data-note="G2">G</button>
+                            <button class="fret" data-fret="4" data-note="G#2">G#</button>
+                            <button class="fret" data-fret="5" data-note="A2">A</button>
+                            <button class="fret" data-fret="7" data-note="B2">B</button>
+                            <button class="fret" data-fret="8" data-note="C3">C</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Chord Buttons -->
+            <div class="quick-chords">
+                <h3>Quick Chords</h3>
+                <div class="chord-buttons">
+                    <button class="chord-btn" data-chord="C">C</button>
+                    <button class="chord-btn" data-chord="D">D</button>
+                    <button class="chord-btn" data-chord="E">E</button>
+                    <button class="chord-btn" data-chord="F">F</button>
+                    <button class="chord-btn" data-chord="G">G</button>
+                    <button class="chord-btn" data-chord="A">A</button>
+                    <button class="chord-btn" data-chord="Am">Am</button>
+                    <button class="chord-btn" data-chord="Em">Em</button>
+                    <button class="chord-btn" data-chord="Dm">Dm</button>
+                    <button class="chord-btn" data-chord="G7">G7</button>
+                    <button class="chord-btn" data-chord="Cmaj7">Cmaj7</button>
+                    <button class="chord-btn" data-chord="Am7">Am7</button>
+                </div>
+            </div>
+
+            <!-- Recording Info -->
+            <div class="recording-info">
+                <h3>Recorded Notes</h3>
+                <div id="recordedNotes">No recording yet</div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Use keyboard keys or click frets to play notes. Record your performance and play it back!</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
